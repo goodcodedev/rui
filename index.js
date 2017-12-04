@@ -21,6 +21,7 @@ var importObject = {
             var strData = new Uint8Array(memView.slice(start, start + size));
             var decoder = new TextDecoder("UTF-8");
             var asUtf8 = decoder.decode(strData);
+            document.body.innerHTML = asUtf8;
             console.log("draw", asUtf8);
         }
     },
