@@ -1,0 +1,10 @@
+@count: u32
+
+actions {
+    Increment
+}
+
+<div>
+    <div>Current count: @count</div>
+    <a click="Increment">Increment</a>
+</div>

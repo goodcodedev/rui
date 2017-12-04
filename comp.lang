@@ -1,0 +1,31 @@
+Comp(items: sourceItems)
+sourceItems:SourceItem[] {
+    PropDecl,
+    Actions,
+    TagElement
+}
+
+PropDecl("@" ident COLON Typ)
+
+Typ {
+    "u32" => U32,
+    "string" => StringType,
+    "bool" => BoolType
+}
+
+Actions("actions" LBRACE actionItems RBRACE)
+actionItems:ActionItem[] {
+    ActionItem(ident)
+}
+
+TagElement("<" ident tagAttributes ">" tagItems "</" end_tag:ident ">")
+
+tagItems:TagItem[] WS {
+    TagElement,
+    Content(content:!"<")
+}
+
+tagAttributes:TagAttribute[] WS {
+    StringAttrib(name:ident EQUAL string),
+    IdentAttrib(name:ident EQUAL ident)
+}

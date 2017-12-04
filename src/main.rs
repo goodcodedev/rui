@@ -121,7 +121,6 @@ impl Data {
 
 #[no_mangle]
 pub fn browser() {
-    
     let mut d = Data { val: 2 };
     let mut comps = Vec::new();
     let test = &mut d as *mut _ as *mut c_void;

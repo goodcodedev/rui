@@ -1,0 +1,3 @@
+@header: String
+
+<h1>@header</h1>
