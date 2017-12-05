@@ -17,6 +17,19 @@ named!(pub actions<Actions>,
         }))
 );
 
+named!(pub attrib_val<AttribVal>, alt_complete!(
+    do_parse!(
+        sp >> string_k: quoted_str >>
+        (AttribVal::StringAttribItem(StringAttrib {
+            string: string_k,
+        })))
+    | do_parse!(
+        sp >> ident_k: ident >>
+        (AttribVal::IdentAttribItem(IdentAttrib {
+            ident: ident_k,
+        })))
+));
+
 named!(pub comp<Comp>,
     do_parse!(
         sp >> items_k: source_items >>
@@ -81,29 +94,27 @@ named!(pub source_items<Vec<SourceItem>>, many0!(alt_complete!(
     | map!(tag_element, |node| { SourceItem::TagElementItem(node) })
 )));
 
-named!(pub tag_attributes<Vec<TagAttribute>>, separated_list!(sp, alt_complete!(
+named!(pub tag_attributes<Vec<TagAttrib>>, many0!(
     do_parse!(
         sp >> name_k: ident >>
         sp >> char!('=') >>
-        sp >> string_k: quoted_str >>
-        (TagAttribute::StringAttribItem(StringAttrib {
+        sp >> attrib_val_k: attrib_val >>
+        (TagAttrib {
             name: name_k,
-            string: string_k,
-        })))
-    | do_parse!(
-        sp >> name_k: ident >>
-        sp >> char!('=') >>
-        sp >> ident_k: ident >>
-        (TagAttribute::IdentAttribItem(IdentAttrib {
-            name: name_k,
-            ident: ident_k,
-        })))
-)));
+            attrib_val: attrib_val_k,
+        }))
+));
 
-named!(pub tag_items<Vec<TagItem>>, separated_list!(sp, alt_complete!(
+named!(pub tag_items<Vec<TagItem>>, many0!(alt_complete!(
     map!(tag_element, |node| { TagItem::TagElementItem(node) })
     | do_parse!(
-        content_k: until_done_result!(tag!("<")) >>
+        sp >> tag!("@") >>
+        sp >> ident_k: ident >>
+        (TagItem::VariableItem(Variable {
+            ident: ident_k,
+        })))
+    | do_parse!(
+        content_k: until_done_result!(one_of!("<@")) >>
         (TagItem::ContentItem(Content {
             content: std::str::from_utf8(content_k).unwrap(),
         })))

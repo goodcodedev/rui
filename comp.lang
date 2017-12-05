@@ -22,10 +22,15 @@ TagElement("<" ident tagAttributes ">" tagItems "</" end_tag:ident ">")
 
 tagItems:TagItem[] WS {
     TagElement,
-    Content(content:!"<")
+    Variable("@" ident),
+    Content(content:!one_of("<@"))
 }
 
-tagAttributes:TagAttribute[] WS {
-    StringAttrib(name:ident EQUAL string),
-    IdentAttrib(name:ident EQUAL ident)
+tagAttributes:TagAttrib[] WS {
+    TagAttrib(name:ident EQUAL AttribVal)
+}
+
+AttribVal {
+    StringAttrib(string),
+    IdentAttrib(ident)
 }

@@ -5,6 +5,6 @@ actions {
 }
 
 <div>
-    <div>Current count: @count</div>
-    <a click="Increment">Increment</a>
+    <div>test @test</div>
+    <a click=Increment>Increment</a>
 </div>
